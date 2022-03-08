@@ -9,26 +9,45 @@ namespace UpmeetApi.Controllers
     {
         // GET: api/<UserController>
         [HttpGet]
-        public IEnumerable<string> GetAllUsers()
+        public IEnumerable<User> GetAllUsers()
         {
             List<User> userCollection = new List<User>();
 
-            userCollection = context.Users.ToList();
-
+            using (UpmeetApiContext context = new UpmeetApiContext())
+            {
+                userCollection = context.Users.ToList();
+            }
+            
             return userCollection;
         }
 
         // GET api/<UserController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public User Get(int id)
         {
-            return "value";
+            User result = null;
+
+            using (UpmeetApiContext context = new UpmeetApiContext())
+            {
+                result = context.Users.Where(x => x.UserId == id).First();
+            }
+            
+            return result;
         }
+
+        // POST api/demoUserData
+
 
         // POST api/<UserController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post(User user, IFormCollection collection)
         {
+            using (UpmeetApiContext context = new UpmeetApiContext())
+            {
+                context.Users.Add(user);
+                context.SaveChanges();
+            }
+
         }
 
         // PUT api/<UserController>/5
