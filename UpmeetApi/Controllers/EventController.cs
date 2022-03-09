@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using UpmeetApi.Models;
 
 namespace UpmeetApi.Controllers
 {
@@ -19,6 +20,25 @@ namespace UpmeetApi.Controllers
         {
             return "value";
         }
+
+
+        //// POST api/demoEventData
+        //[HttpPost]
+        //public void PostDemoEventData(int quantityEvents)
+        //{
+        //    for (int i = 0; i < quantityEvents; i++)
+        //    {
+        //        using (UpmeetApiContext context = new UpmeetApiContext())
+        //        {
+        //            Event event = new Event();
+        //            event.EventId = i;
+        //            event
+        //            event.EventName = "Test Event " + i.ToString();
+        //            context.Users.Add(user);
+        //            context.SaveChanges();
+        //        }
+        //    }
+        //}
 
         // POST api/<EventController>
         [HttpPost]

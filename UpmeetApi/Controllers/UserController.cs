@@ -23,7 +23,7 @@ namespace UpmeetApi.Controllers
 
         // GET api/<UserController>/5
         [HttpGet("{id}")]
-        public User Get(int id)
+        public User GetUserById(int id)
         {
             User result = null;
 
@@ -36,11 +36,25 @@ namespace UpmeetApi.Controllers
         }
 
         // POST api/demoUserData
-
+        [HttpPost]
+        public void PostDemoUserData(int quantityUsers)
+        {
+            for (int i = 0; i < quantityUsers; i++)
+            {
+                using (UpmeetApiContext context = new UpmeetApiContext())
+                {
+                    User user = new User();
+                    user.UserId = i;
+                    user.UserName = "Test User " + i.ToString();
+                    context.Users.Add(user);
+                    context.SaveChanges();
+                }
+            }
+        }
 
         // POST api/<UserController>
         [HttpPost]
-        public void Post(User user, IFormCollection collection)
+        public void AddUser(User user, IFormCollection collection)
         {
             using (UpmeetApiContext context = new UpmeetApiContext())
             {
@@ -58,8 +72,15 @@ namespace UpmeetApi.Controllers
 
         // DELETE api/<UserController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void DeleteUserById(int id)
         {
+            User result = null;
+            using (UpmeetApiContext context = new UpmeetApiContext())
+            {
+                result = context.Users.Where(x => x.UserId == id).First();
+                context.Users.Remove(result);
+                context.SaveChanges();
+            }
         }
     }
 }
