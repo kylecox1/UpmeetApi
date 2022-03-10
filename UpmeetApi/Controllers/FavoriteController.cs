@@ -9,22 +9,40 @@ namespace UpmeetApi.Controllers
     {
         // GET: api/<FavoriteController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<Favorite> GetAllFavoritesByUserId(int userId)
         {
-            return new string[] { "value1", "value2" };
+            List<Favorite> favoriteCollection = new List<Favorite>();
+            using (UpmeetApiContext context = new UpmeetApiContext())
+            {
+                favoriteCollection = context.Favorites.ToList();
+            }
+            return favoriteCollection;
         }
 
         // GET api/<FavoriteController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public Favorite GetFavoriteById(int id)
         {
-            return "value";
+            Favorite result = null;
+            using (UpmeetApiContext context = new UpmeetApiContext())
+            {
+                result = context.Favorites.Where(x => x.FavoriteId == id).First();
+            }
+            return result;
         }
 
         // POST api/<FavoriteController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void AddEventToFavorites(int userId, int eventId)
         {
+            using (UpmeetApiContext context = new UpmeetApiContext())
+            {
+                Favorite favorite = new Favorite();
+                favorite.UserId = userId;
+                favorite.EventId = eventId;
+                context.Favorites.Add(favorite);
+                context.SaveChanges();
+            }
         }
 
         // PUT api/<FavoriteController>/5
@@ -35,8 +53,15 @@ namespace UpmeetApi.Controllers
 
         // DELETE api/<FavoriteController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void DeleteFavoriteById(int id)
         {
+            Favorite result = null;
+            using (UpmeetApiContext context = new UpmeetApiContext())
+            {
+                result = context.Favorites.Where(x => x.FavoriteId == id).First();
+                context.Favorites.Remove(result);
+                context.SaveChanges();
+            }
         }
     }
 }

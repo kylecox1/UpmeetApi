@@ -9,41 +9,37 @@ namespace UpmeetApi.Controllers
     {
         // GET: api/<EventController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<Event> GetAllEvents()
         {
-            return new string[] { "value1", "value2" };
+            List<Event> eventCollection = new List<Event>();
+            using (UpmeetApiContext context = new UpmeetApiContext())
+            {
+                eventCollection = context.Events.ToList();
+            }
+            return eventCollection;
         }
-
+        
         // GET api/<EventController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public Event GetEventById(int id)
         {
-            return "value";
+            Event result = null;
+            using (UpmeetApiContext context = new UpmeetApiContext())
+            {
+                result = context.Events.Where(x => x.EventId == id).First();
+            }
+            return result;
         }
-
-
-        //// POST api/demoEventData
-        //[HttpPost]
-        //public void PostDemoEventData(int quantityEvents)
-        //{
-        //    for (int i = 0; i < quantityEvents; i++)
-        //    {
-        //        using (UpmeetApiContext context = new UpmeetApiContext())
-        //        {
-        //            Event event = new Event();
-        //            event.EventId = i;
-        //            event
-        //            event.EventName = "Test Event " + i.ToString();
-        //            context.Users.Add(user);
-        //            context.SaveChanges();
-        //        }
-        //    }
-        //}
 
         // POST api/<EventController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void AddEvent(Event addedEvent)
         {
+            using (UpmeetApiContext context = new UpmeetApiContext())
+            {
+                context.Events.Add(addedEvent);
+                context.SaveChanges();
+            }
         }
 
         // PUT api/<EventController>/5
@@ -54,8 +50,15 @@ namespace UpmeetApi.Controllers
 
         // DELETE api/<EventController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void DeleteByEventId(int id)
         {
-        }
+            Event result = null;
+            using (UpmeetApiContext context = new UpmeetApiContext())
+            {
+                result = context.Events.Where(x => x.EventId == id).First();
+                context.Events.Remove(result);
+                context.SaveChanges();
+            }
+        }       
     }
 }
