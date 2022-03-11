@@ -3,20 +3,27 @@ using UpmeetApi.Models;
 
 namespace UpmeetApi.Controllers
 {
+    public class Results
+    {
+        public IEnumerable<Event> results { get; set; }
+    }
+
     [Route("api/[controller]")]
     [ApiController]
     public class EventController : ControllerBase
     {
         // GET: api/<EventController>
         [HttpGet]
-        public IEnumerable<Event> GetAllEvents()
+        public Results GetAllEvents()
         {
             List<Event> eventCollection = new List<Event>();
             using (UpmeetApiContext context = new UpmeetApiContext())
             {
                 eventCollection = context.Events.ToList();
             }
-            return eventCollection;
+            Results result = new Results();
+            result.results = eventCollection;
+            return result;
         }
         
         // GET api/<EventController>/5

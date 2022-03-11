@@ -3,20 +3,27 @@ using UpmeetApi.Models;
 
 namespace UpmeetApi.Controllers
 {
+    public class UserResults
+    {
+        public IEnumerable<User> results { get; set; }
+    }
+
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
         // GET: api/<UserController>
         [HttpGet]
-        public IEnumerable<User> GetAllUsers()
+        public UserResults GetAllUsers()
         {
             List<User> userCollection = new List<User>();
             using (UpmeetApiContext context = new UpmeetApiContext())
             {
                 userCollection = context.Users.ToList();
             }
-            return userCollection;
+            UserResults result = new UserResults();
+            result.results = userCollection;
+            return result;
         }
 
         // GET api/<UserController>/5
